@@ -57,8 +57,8 @@ You can load the library directly from unpkg or jsDelivr without installing:
 
 ```html
 <script type="module">
-  import { generateIosPwaSplash } from 'https://unpkg.com/ios-pwa-splash-screen@1.0.0/dist/index.js';
-  // import { generateIosPwaSplash } from 'https://cdn.jsdelivr.net/npm/ios-pwa-splash-screen@1.0.0/dist/index.js';
+  import { generateIosPwaSplash } from 'https://unpkg.com/ios-pwa-splash-screen/dist/index.js';
+  // import { generateIosPwaSplash } from 'https://cdn.jsdelivr.net/npm/ios-pwa-splash-screen/dist/index.js';
 
   window.addEventListener('load', () => {
     generateIosPwaSplash({
@@ -73,9 +73,9 @@ You can load the library directly from unpkg or jsDelivr without installing:
 
 ```html
 <!-- unpkg -->
-<script src="https://unpkg.com/ios-pwa-splash-screen@1.0.0/dist/index.umd.js"></script>
+<script src="https://unpkg.com/ios-pwa-splash-screen/dist/index.umd.js"></script>
 <!-- jsDelivr -->
-<script src="https://cdn.jsdelivr.net/npm/ios-pwa-splash-screen@1.0.0/dist/index.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ios-pwa-splash-screen/dist/index.umd.js"></script>
 
 <script>
   // `generateIosPwaSplash` is exposed on window.IosPwaSplashScreen
@@ -100,7 +100,6 @@ You can load the library directly from unpkg or jsDelivr without installing:
 | `fetchPriority`    | `'low' \| 'medium' \| 'high'`      | `'high'`                      | Sets `img.fetchPriority`                                               |
 | `cleanup`          | `boolean`                          | `true`                        | Remove previously generated `<link>` tags before injecting new ones    |
 | `customAttribute`  | `string`                           | `'data-pwa-splash-generated'` | Attribute to flag generated tags                                       |
-| `debug`            | `boolean`                          | `false`                       | Enables console debug messages                                         |
 
 ### `IconConfig`
 
