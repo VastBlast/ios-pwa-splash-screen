@@ -1,0 +1,50 @@
+{
+  "name": "ios-pwa-splash-screen",
+  "version": "1.0.1",
+  "description": "Add iOS PWA splash screens to your progressive web app with ease.",
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch"
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "unpkg": "dist/index.umd.js",
+  "jsdelivr": "dist/index.umd.js",
+  "browser": "dist/index.umd.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    "import": "./dist/index.js",
+    "require": "./dist/index.cjs.js",
+    "default": "./dist/index.umd.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "pwa",
+    "ios",
+    "splash",
+    "screen",
+    "generator",
+    "typescript",
+    "apple",
+    "mac",
+    "ipad",
+    "mobile",
+    "progressive",
+    "web",
+    "application",
+    "webapp"
+  ],
+  "author": "VastBlast",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VastBlast/ios-pwa-splash-screen.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "tsdown": "^0.13.3",
+    "typescript": "^5.9.2"
+  },
+  "type": "module"
+}
