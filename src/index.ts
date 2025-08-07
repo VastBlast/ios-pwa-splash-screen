@@ -2,8 +2,8 @@ import { createSplashscreen, injectLinkTag, isIOS, loadImage } from "./helpers";
 import type { PwaSplashOptions } from "./types";
 
 const defaultOptions: Partial<PwaSplashOptions> = {
-    ensure_ios: true,
-    ensure_meta_tags: true,
+    ensureIos: true,
+    ensureMetaTags: true,
     imageType: 'image/png',
     quality: 1,
     cleanup: true,
@@ -26,7 +26,7 @@ export async function generateIosPwaSplash(userOptions: PwaSplashOptions): Promi
     if (typeof window === 'undefined' || typeof document === 'undefined') return;
 
     // Abort if not an iOS device
-    if (opts.ensure_ios && !isIOS()) return;
+    if (opts.ensureIos && !isIOS()) return;
 
     // Clean up previous tags
     if (opts.cleanup && opts.customAttribute) {
@@ -34,7 +34,7 @@ export async function generateIosPwaSplash(userOptions: PwaSplashOptions): Promi
     }
 
     // Add 'apple-mobile-web-app-capable' meta tag.
-    if (opts.ensure_meta_tags) {
+    if (opts.ensureMetaTags) {
         if (!document.querySelector('meta[name="apple-mobile-web-app-capable"]')) {
             const meta = document.createElement('meta');
             meta.name = 'apple-mobile-web-app-capable';
@@ -46,7 +46,7 @@ export async function generateIosPwaSplash(userOptions: PwaSplashOptions): Promi
     // Load icon images
     const [mainIconImage, darkIconImage] = await Promise.all([
         loadImage(opts.icon.url, opts.crossOrigin, opts.fetchPriority),
-        opts.icon_dark ? loadImage(opts.icon_dark.url, opts.crossOrigin, opts.fetchPriority) : Promise.resolve(null)
+        opts.iconDark ? loadImage(opts.iconDark.url, opts.crossOrigin, opts.fetchPriority) : Promise.resolve(null)
     ]);
 
     let deviceWidth = screen.width;
@@ -78,9 +78,9 @@ export async function generateIosPwaSplash(userOptions: PwaSplashOptions): Promi
     if (landscapeDataUrl) injectLinkTag(landscapeDataUrl, `screen and (orientation: landscape)`, opts.customAttribute!);
 
     // Generate and inject dark mode splash screens if configured
-    if (darkIconImage && opts.icon_dark) {
-        const darkPortraitDataUrl = createSplashscreen(darkIconImage, opts.icon_dark, portraitWidth, portraitHeight, opts);
-        const darkLandscapeDataUrl = createSplashscreen(darkIconImage, opts.icon_dark, landscapeWidth, landscapeHeight, opts);
+    if (darkIconImage && opts.iconDark) {
+        const darkPortraitDataUrl = createSplashscreen(darkIconImage, opts.iconDark, portraitWidth, portraitHeight, opts);
+        const darkLandscapeDataUrl = createSplashscreen(darkIconImage, opts.iconDark, landscapeWidth, landscapeHeight, opts);
 
         if (darkPortraitDataUrl) injectLinkTag(darkPortraitDataUrl, `screen and (prefers-color-scheme: dark) and (orientation: portrait)`, opts.customAttribute!);
         if (darkLandscapeDataUrl) injectLinkTag(darkLandscapeDataUrl, `screen and (prefers-color-scheme: dark) and (orientation: landscape)`, opts.customAttribute!);

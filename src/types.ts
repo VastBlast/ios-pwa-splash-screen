@@ -21,18 +21,18 @@ export interface PwaSplashOptions {
     /** Configuration for the default (light mode) icon. */
     icon: IconConfig;
     /** Optional configuration for the dark mode icon. If provided, a dark mode splash screen will be generated. */
-    icon_dark?: IconConfig;
+    iconDark?: IconConfig;
     /**
      * If true, the script will only run if the user agent indicates an iOS or iPadOS device.
      * @default true
      */
-    ensure_ios?: boolean;
+    ensureIos?: boolean;
     /**
      * If true, the script will ensure the `<meta name="apple-mobile-web-app-capable" content="yes">` tag
      * exists in the document head, adding it if not found.
      * @default true
      */
-    ensure_meta_tags?: boolean;
+    ensureMetaTags?: boolean;
     /**
      * The cross-origin attribute for the image request. Important if the icon is hosted on a different domain.
      * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin
