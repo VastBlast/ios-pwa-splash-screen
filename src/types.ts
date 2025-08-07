@@ -64,9 +64,4 @@ export interface PwaSplashOptions {
      * @default 'data-pwa-splash-generated'
      */
     customAttribute?: string;
-    /**
-     * If true, logs diagnostic information to the console.
-     * @default false
-     */
-    debug?: boolean;
 }

@@ -7,8 +7,7 @@ const defaultOptions: Partial<PwaSplashOptions> = {
     imageType: 'image/png',
     quality: 1,
     cleanup: true,
-    customAttribute: 'data-pwa-splash-generated',
-    debug: false,
+    customAttribute: 'data-pwa-splash-generated'
 };
 
 /**
@@ -22,39 +21,32 @@ export async function generateIosPwaSplash(userOptions: PwaSplashOptions): Promi
         ...userOptions,
     }
 
-    if (opts.debug) console.debug("PWA Splash Generator: Initializing with options", opts);
+    // Abort if not in a browser environment
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
 
-    if (typeof window === 'undefined' || typeof document === 'undefined') {
-        if (opts.debug) console.warn("PWA Splash Generator: Not in a browser environment. Aborting.");
-        return;
-    }
+    // Abort if not an iOS device
+    if (opts.ensure_ios && !isIOS()) return;
 
-    if (opts.ensure_ios && !isIOS()) {
-        if (opts.debug) console.debug("PWA Splash Generator: Not an iOS device. Aborting.");
-        return;
-    }
-
+    // Clean up previous tags
     if (opts.cleanup && opts.customAttribute) {
         document.querySelectorAll(`link[${opts.customAttribute}]`).forEach(el => el.remove());
-        if (opts.debug) console.debug("PWA Splash Generator: Cleaned up previous tags.");
     }
 
+    // Add 'apple-mobile-web-app-capable' meta tag.
     if (opts.ensure_meta_tags) {
         if (!document.querySelector('meta[name="apple-mobile-web-app-capable"]')) {
             const meta = document.createElement('meta');
             meta.name = 'apple-mobile-web-app-capable';
             meta.content = 'yes';
             document.head.appendChild(meta);
-            if (opts.debug) console.debug("PWA Splash Generator: Added 'apple-mobile-web-app-capable' meta tag.");
         }
     }
 
+    // Load icon images
     const [mainIconImage, darkIconImage] = await Promise.all([
         loadImage(opts.icon.url, opts.crossOrigin),
         opts.icon_dark ? loadImage(opts.icon_dark.url, opts.crossOrigin) : Promise.resolve(null)
     ]);
-
-    if (opts.debug) console.debug("PWA Splash Generator: Icons loaded successfully.");
 
     let deviceWidth = screen.width;
     let deviceHeight = screen.height;
@@ -69,8 +61,6 @@ export async function generateIosPwaSplash(userOptions: PwaSplashOptions): Promi
             // of modern iPhone screen dimensions. Yes, its not a perfect solution, but its the only way I currently know of to handle this.
             // It should not negatively affect any device however.
             deviceHeight = Math.round(deviceWidth * (284 / 131));
-
-            if (opts.debug) console.debug(`PWA Splash Generator: Detected possible private mode. Adjusted dimensions to ${deviceWidth}x${deviceHeight}`);
         }
     }
 
@@ -85,7 +75,6 @@ export async function generateIosPwaSplash(userOptions: PwaSplashOptions): Promi
 
     if (portraitDataUrl) injectLinkTag(portraitDataUrl, `screen and (orientation: portrait)`, opts.customAttribute!);
     if (landscapeDataUrl) injectLinkTag(landscapeDataUrl, `screen and (orientation: landscape)`, opts.customAttribute!);
-    if (opts.debug) console.debug("PWA Splash Generator: Injected light mode splash screens.");
 
     // Generate and inject dark mode splash screens if configured
     if (darkIconImage && opts.icon_dark) {
@@ -94,6 +83,5 @@ export async function generateIosPwaSplash(userOptions: PwaSplashOptions): Promi
 
         if (darkPortraitDataUrl) injectLinkTag(darkPortraitDataUrl, `screen and (prefers-color-scheme: dark) and (orientation: portrait)`, opts.customAttribute!);
         if (darkLandscapeDataUrl) injectLinkTag(darkLandscapeDataUrl, `screen and (prefers-color-scheme: dark) and (orientation: landscape)`, opts.customAttribute!);
-        if (opts.debug) console.debug("PWA Splash Generator: Injected dark mode splash screens.");
     }
 }

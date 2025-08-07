@@ -21,10 +21,7 @@ export const createSplashscreen = (iconImage: HTMLImageElement, config: IconConf
     canvas.height = canvasHeight;
     const ctx = canvas.getContext('2d');
 
-    if (!ctx) {
-        if (options.debug) console.error("Could not get 2D context from canvas.");
-        return null;
-    }
+    if (!ctx) throw new Error('Failed to get 2D context from canvas.');
 
     ctx.fillStyle = config.backgroundColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
