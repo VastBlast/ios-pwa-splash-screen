@@ -7,7 +7,8 @@ const defaultOptions: Partial<PwaSplashOptions> = {
     imageType: 'image/png',
     quality: 1,
     cleanup: true,
-    customAttribute: 'data-pwa-splash-generated'
+    customAttribute: 'data-pwa-splash-generated',
+    fetchPriority: 'high'
 };
 
 /**
@@ -44,8 +45,8 @@ export async function generateIosPwaSplash(userOptions: PwaSplashOptions): Promi
 
     // Load icon images
     const [mainIconImage, darkIconImage] = await Promise.all([
-        loadImage(opts.icon.url, opts.crossOrigin),
-        opts.icon_dark ? loadImage(opts.icon_dark.url, opts.crossOrigin) : Promise.resolve(null)
+        loadImage(opts.icon.url, opts.crossOrigin, opts.fetchPriority),
+        opts.icon_dark ? loadImage(opts.icon_dark.url, opts.crossOrigin, opts.fetchPriority) : Promise.resolve(null)
     ]);
 
     let deviceWidth = screen.width;
