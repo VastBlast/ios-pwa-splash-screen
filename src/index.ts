@@ -1,4 +1,4 @@
-import { createSplashscreen, injectLinkTag, isIOS, loadImage } from "./helpers";
+import { createSplashscreen, injectLinkTag, removeLinkTags, isIOS, loadImage } from "./helpers";
 import type { PwaSplashOptions } from "./types";
 
 const defaultOptions: Partial<PwaSplashOptions> = {
@@ -30,7 +30,7 @@ export async function generateIosPwaSplash(userOptions: PwaSplashOptions): Promi
 
     // Clean up previous tags
     if (opts.cleanup && opts.customAttribute) {
-        document.querySelectorAll(`link[${opts.customAttribute}]`).forEach(el => el.remove());
+        removeLinkTags(opts.customAttribute);
     }
 
     // Add 'apple-mobile-web-app-capable' meta tag.
