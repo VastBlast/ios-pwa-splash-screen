@@ -35,13 +35,13 @@ window.addEventListener('load', () => {
       backgroundColor: '#ffffff',
       margin: 20,
     },
-    icon_dark: {
+    iconDark: {
       url: '/assets/icon-dark.png',
       backgroundColor: '#000000',
       margin: 20,
     },
     crossOrigin: 'anonymous',
-    ensure_meta_tags: true,
+    ensureMetaTags: true,
     debug: false,
   }).catch(err => {
     console.error('Splash generation failed:', err);
@@ -63,7 +63,7 @@ You can load the library directly from unpkg or jsDelivr without installing:
   window.addEventListener('load', () => {
     generateIosPwaSplash({
       icon: { url: '/icon-light.png', backgroundColor: '#fff', margin: 20 },
-      icon_dark: { url: '/icon-dark.png', backgroundColor: '#000', margin: 20 },
+      iconDark: { url: '/icon-dark.png', backgroundColor: '#000', margin: 20 },
     });
   });
 </script>
@@ -81,7 +81,7 @@ You can load the library directly from unpkg or jsDelivr without installing:
   // `generateIosPwaSplash` is exposed on window.IosPwaSplashScreen
   window.IosPwaSplashScreen.generateIosPwaSplash({
     icon: { url: '/icon-light.png', backgroundColor: '#fff', margin: 20 },
-    icon_dark: { url: '/icon-dark.png', backgroundColor: '#000', margin: 20 },
+    iconDark: { url: '/icon-dark.png', backgroundColor: '#000', margin: 20 },
   });
 </script>
 ```
@@ -91,9 +91,9 @@ You can load the library directly from unpkg or jsDelivr without installing:
 | Option             | Type                               | Default                       | Description                                                            |
 | ------------------ | ---------------------------------- | ----------------------------- | ---------------------------------------------------------------------- |
 | `icon`             | `IconConfig`                       | **required**                  | Light-mode icon config (URL, bg color, margin)                         |
-| `icon_dark`        | `IconConfig \| undefined`          | *none*                        | Dark-mode icon config; omit to disable dark-mode splash                |
-| `ensure_ios`       | `boolean`                          | `true`                        | Only run on iOS/iPadOS devices                                         |
-| `ensure_meta_tags` | `boolean`                          | `true`                        | Auto-inject `<meta name="apple-mobile-web-app-capable" content="yes">` |
+| `iconDark`         | `IconConfig \| undefined`          | *none*                        | Dark-mode icon config; omit to disable dark-mode splash                |
+| `ensureIos`        | `boolean`                          | `true`                        | Only run on iOS/iPadOS devices                                         |
+| `ensureMetaTags`   | `boolean`                          | `true`                        | Auto-inject `<meta name="apple-mobile-web-app-capable" content="yes">` |
 | `crossOrigin`      | `'anonymous' \| 'use-credentials'` | *none*                        | Sets `img.crossOrigin` on the icon image                               |
 | `imageType`        | `'image/png' \| 'image/jpeg'`      | `'image/png'`                 | Output format                                                          |
 | `quality`          | `number (0–1)`                     | `1`                           | JPEG quality (if `imageType === 'image/jpeg'`)                         |
