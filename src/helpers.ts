@@ -4,7 +4,7 @@ export function isIOS(): boolean {
     return /iPad|iPhone|iPod/.test(navigator.userAgent) && !('MSStream' in window);
 }
 
-export function loadImage(url: string, crossOrigin?: 'anonymous' | 'use-credentials', fetchPriority?: 'low' | 'medium' | 'high'): Promise<HTMLImageElement> {
+export function loadImage(url: string, crossOrigin?: 'anonymous' | 'use-credentials', fetchPriority?: 'low' | 'high' | 'auto'): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
         const img = new Image();
         if (crossOrigin) img.crossOrigin = crossOrigin;

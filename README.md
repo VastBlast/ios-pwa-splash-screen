@@ -97,7 +97,7 @@ You can load the library directly from unpkg or jsDelivr without installing:
 | `crossOrigin`      | `'anonymous' \| 'use-credentials'` | *none*                        | Sets `img.crossOrigin` on the icon image                               |
 | `imageType`        | `'image/png' \| 'image/jpeg'`      | `'image/png'`                 | Output format                                                          |
 | `quality`          | `number (0–1)`                     | `1`                           | JPEG quality (if `imageType === 'image/jpeg'`)                         |
-| `fetchPriority`    | `'low' \| 'medium' \| 'high'`      | `'high'`                      | Sets `img.fetchPriority`                                               |
+| `fetchPriority`    | `'low' \| 'high' \| 'auto'`        | `'high'`                      | Sets `img.fetchPriority`                                               |
 | `cleanup`          | `boolean`                          | `true`                        | Remove previously generated `<link>` tags before injecting new ones    |
 | `customAttribute`  | `string`                           | `'data-pwa-splash-generated'` | Attribute to flag generated tags                                       |
 

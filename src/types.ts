@@ -49,11 +49,12 @@ export interface PwaSplashOptions {
      */
     quality?: number;
     /**
-     * Fetch priority for the icon images. Can be 'low', 'medium', or 'high'.
+     * Fetch priority for the icon images. Can be 'low', 'high' or 'auto'.
      * This is used to optimize loading performance.
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/fetchPriority
      * @default 'high'
      */
-    fetchPriority?: 'low' | 'medium' | 'high';
+    fetchPriority?: 'low' | 'high' | 'auto';
     /**
      * If true, removes any previously generated splash screen link tags before adding new ones.
      * @default true
