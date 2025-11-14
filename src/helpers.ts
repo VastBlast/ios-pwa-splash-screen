@@ -15,7 +15,7 @@ export function loadImage(url: string, crossOrigin?: 'anonymous' | 'use-credenti
     });
 };
 
-export const createSplashscreen = (iconImage: HTMLImageElement, config: IconConfig, canvasWidth: number, canvasHeight: number, options: PwaSplashOptions): string | null => {
+export const createSplashscreen = (iconImage: HTMLImageElement, config: IconConfig, canvasWidth: number, canvasHeight: number, options: PwaSplashOptions): string => {
     const canvas = document.createElement('canvas');
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;

@@ -74,15 +74,15 @@ export async function generateIosPwaSplash(userOptions: PwaSplashOptions): Promi
     const portraitDataUrl = createSplashscreen(mainIconImage, opts.icon, portraitWidth, portraitHeight, opts);
     const landscapeDataUrl = createSplashscreen(mainIconImage, opts.icon, landscapeWidth, landscapeHeight, opts);
 
-    if (portraitDataUrl) injectLinkTag(portraitDataUrl, `screen and (orientation: portrait)`, opts.customAttribute!);
-    if (landscapeDataUrl) injectLinkTag(landscapeDataUrl, `screen and (orientation: landscape)`, opts.customAttribute!);
+    injectLinkTag(portraitDataUrl, `screen and (orientation: portrait)`, opts.customAttribute!);
+    injectLinkTag(landscapeDataUrl, `screen and (orientation: landscape)`, opts.customAttribute!);
 
     // Generate and inject dark mode splash screens if configured
     if (darkIconImage && opts.iconDark) {
         const darkPortraitDataUrl = createSplashscreen(darkIconImage, opts.iconDark, portraitWidth, portraitHeight, opts);
         const darkLandscapeDataUrl = createSplashscreen(darkIconImage, opts.iconDark, landscapeWidth, landscapeHeight, opts);
 
-        if (darkPortraitDataUrl) injectLinkTag(darkPortraitDataUrl, `screen and (prefers-color-scheme: dark) and (orientation: portrait)`, opts.customAttribute!);
-        if (darkLandscapeDataUrl) injectLinkTag(darkLandscapeDataUrl, `screen and (prefers-color-scheme: dark) and (orientation: landscape)`, opts.customAttribute!);
+        injectLinkTag(darkPortraitDataUrl, `screen and (prefers-color-scheme: dark) and (orientation: portrait)`, opts.customAttribute!);
+        injectLinkTag(darkLandscapeDataUrl, `screen and (prefers-color-scheme: dark) and (orientation: landscape)`, opts.customAttribute!);
     }
 }
