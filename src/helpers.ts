@@ -49,11 +49,16 @@ export const createSplashscreen = (iconImage: HTMLImageElement, config: IconConf
     return canvas.toDataURL(options.imageType, options.quality);
 };
 
-export function injectLinkTag(href: string, media: string, customAttribute: string) {
+export function injectLinkTag(href: string, media: string, customAttribute: string): void {
     const link = document.createElement('link');
     link.rel = 'apple-touch-startup-image';
     link.href = href;
     link.media = media;
     link.setAttribute(customAttribute, 'true');
     document.head.appendChild(link);
+};
+
+export function removeLinkTags(customAttribute: string): void {
+    const links = document.head.querySelectorAll(`link[rel="apple-touch-startup-image"][${customAttribute}="true"]`);
+    links.forEach(el => el.remove());
 };
