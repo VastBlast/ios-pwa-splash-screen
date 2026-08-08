@@ -57,10 +57,10 @@ export async function generateIosPwaSplash(userOptions: PwaSplashOptions): Promi
         }
     }
 
-    const portraitWidth = deviceWidth * pixelRatio;
-    const portraitHeight = deviceHeight * pixelRatio;
-    const landscapeWidth = deviceHeight * pixelRatio;
-    const landscapeHeight = deviceWidth * pixelRatio;
+    const portraitWidth = Math.min(deviceWidth, deviceHeight) * pixelRatio;
+    const portraitHeight = Math.max(deviceWidth, deviceHeight) * pixelRatio;
+    const landscapeWidth = portraitHeight;
+    const landscapeHeight = portraitWidth;
 
     const splashScreens = [
         {
