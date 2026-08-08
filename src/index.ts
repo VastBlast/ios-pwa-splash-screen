@@ -25,11 +25,6 @@ export async function generateIosPwaSplash(userOptions: PwaSplashOptions): Promi
     // Abort if not an iOS device
     if (opts.ensureIos && !isIOS()) return;
 
-    // Clean up previous tags
-    if (opts.cleanup && opts.customAttribute) {
-        removeLinkTags(opts.customAttribute);
-    }
-
     // Add 'apple-mobile-web-app-capable' meta tag.
     if (opts.ensureMetaTags) {
         if (!document.querySelector('meta[name="apple-mobile-web-app-capable"]')) {
@@ -67,19 +62,37 @@ export async function generateIosPwaSplash(userOptions: PwaSplashOptions): Promi
     const landscapeWidth = deviceHeight * pixelRatio;
     const landscapeHeight = deviceWidth * pixelRatio;
 
-    // Generate and inject light mode splash screens
-    const portraitDataUrl = createSplashscreen(mainIconImage, opts.icon, portraitWidth, portraitHeight, opts);
-    const landscapeDataUrl = createSplashscreen(mainIconImage, opts.icon, landscapeWidth, landscapeHeight, opts);
+    const splashScreens = [
+        {
+            href: createSplashscreen(mainIconImage, opts.icon, portraitWidth, portraitHeight, opts),
+            media: 'screen and (orientation: portrait)',
+        },
+        {
+            href: createSplashscreen(mainIconImage, opts.icon, landscapeWidth, landscapeHeight, opts),
+            media: 'screen and (orientation: landscape)',
+        },
+    ];
 
-    injectLinkTag(portraitDataUrl, `screen and (orientation: portrait)`, opts.customAttribute);
-    injectLinkTag(landscapeDataUrl, `screen and (orientation: landscape)`, opts.customAttribute);
-
-    // Generate and inject dark mode splash screens if configured
+    // Generate dark mode splash screens if configured
     if (darkIconImage && opts.iconDark) {
-        const darkPortraitDataUrl = createSplashscreen(darkIconImage, opts.iconDark, portraitWidth, portraitHeight, opts);
-        const darkLandscapeDataUrl = createSplashscreen(darkIconImage, opts.iconDark, landscapeWidth, landscapeHeight, opts);
+        splashScreens.push(
+            {
+                href: createSplashscreen(darkIconImage, opts.iconDark, portraitWidth, portraitHeight, opts),
+                media: 'screen and (prefers-color-scheme: dark) and (orientation: portrait)',
+            },
+            {
+                href: createSplashscreen(darkIconImage, opts.iconDark, landscapeWidth, landscapeHeight, opts),
+                media: 'screen and (prefers-color-scheme: dark) and (orientation: landscape)',
+            },
+        );
+    }
 
-        injectLinkTag(darkPortraitDataUrl, `screen and (prefers-color-scheme: dark) and (orientation: portrait)`, opts.customAttribute);
-        injectLinkTag(darkLandscapeDataUrl, `screen and (prefers-color-scheme: dark) and (orientation: landscape)`, opts.customAttribute);
+    // Keep existing splash screens if loading or generation fails.
+    if (opts.cleanup && opts.customAttribute) {
+        removeLinkTags(opts.customAttribute);
+    }
+
+    for (const { href, media } of splashScreens) {
+        injectLinkTag(href, media, opts.customAttribute);
     }
 }
