@@ -1,7 +1,10 @@
 import type { IconConfig, PwaSplashOptions } from "./types";
 
 export function isIOS(): boolean {
-    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !('MSStream' in window);
+    // iPadOS 13+ may use the same desktop-class user agent as macOS.
+    return (/iPad|iPhone|iPod/.test(navigator.userAgent)
+        || (navigator.userAgent.includes('Macintosh') && navigator.maxTouchPoints > 1))
+        && !('MSStream' in window);
 }
 
 export function loadImage(url: string, crossOrigin?: 'anonymous' | 'use-credentials', fetchPriority?: 'low' | 'high' | 'auto'): Promise<HTMLImageElement> {
