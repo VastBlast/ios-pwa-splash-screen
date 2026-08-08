@@ -1,5 +1,6 @@
 import { createSplashscreen, injectLinkTag, removeLinkTags, isIOS, loadImage } from "./helpers";
 import type { PwaSplashOptions } from "./types";
+export type { IconConfig, PwaSplashOptions } from "./types";
 
 /**
  * Generates and injects iOS PWA splash screens for light and dark modes.
