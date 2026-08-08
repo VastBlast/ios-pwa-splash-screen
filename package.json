@@ -10,6 +10,7 @@
     "check": "npm run check:types && npm run check:lint",
     "prepublishOnly": "npm run check && npm run build"
   },
+  "sideEffects": false,
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "unpkg": "dist/index.umd.js",
