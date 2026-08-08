@@ -1,26 +1,22 @@
 import { createSplashscreen, injectLinkTag, removeLinkTags, isIOS, loadImage } from "./helpers";
 import type { PwaSplashOptions } from "./types";
 
-const defaultOptions: Partial<PwaSplashOptions> = {
-    ensureIos: true,
-    ensureMetaTags: true,
-    imageType: 'image/png',
-    quality: 1,
-    cleanup: true,
-    customAttribute: 'data-pwa-splash-generated',
-    fetchPriority: 'high'
-};
-
 /**
  * Generates and injects iOS PWA splash screens for light and dark modes.
  * @param {PwaSplashOptions} userOptions - The configuration options for the splash screens.
  * @returns {Promise<void>} A promise that resolves when the process is complete or rejects on critical errors.
  */
 export async function generateIosPwaSplash(userOptions: PwaSplashOptions): Promise<void> {
-    const opts: PwaSplashOptions = {
-        ...defaultOptions,
+    const opts = {
         ...userOptions,
-    }
+        ensureIos: userOptions.ensureIos ?? true,
+        ensureMetaTags: userOptions.ensureMetaTags ?? true,
+        imageType: userOptions.imageType ?? 'image/png',
+        quality: userOptions.quality ?? 1,
+        cleanup: userOptions.cleanup ?? true,
+        customAttribute: userOptions.customAttribute ?? 'data-pwa-splash-generated',
+        fetchPriority: userOptions.fetchPriority ?? 'high',
+    };
 
     // Abort if not in a browser environment
     if (typeof window === 'undefined' || typeof document === 'undefined') return;
@@ -74,15 +70,15 @@ export async function generateIosPwaSplash(userOptions: PwaSplashOptions): Promi
     const portraitDataUrl = createSplashscreen(mainIconImage, opts.icon, portraitWidth, portraitHeight, opts);
     const landscapeDataUrl = createSplashscreen(mainIconImage, opts.icon, landscapeWidth, landscapeHeight, opts);
 
-    injectLinkTag(portraitDataUrl, `screen and (orientation: portrait)`, opts.customAttribute!);
-    injectLinkTag(landscapeDataUrl, `screen and (orientation: landscape)`, opts.customAttribute!);
+    injectLinkTag(portraitDataUrl, `screen and (orientation: portrait)`, opts.customAttribute);
+    injectLinkTag(landscapeDataUrl, `screen and (orientation: landscape)`, opts.customAttribute);
 
     // Generate and inject dark mode splash screens if configured
     if (darkIconImage && opts.iconDark) {
         const darkPortraitDataUrl = createSplashscreen(darkIconImage, opts.iconDark, portraitWidth, portraitHeight, opts);
         const darkLandscapeDataUrl = createSplashscreen(darkIconImage, opts.iconDark, landscapeWidth, landscapeHeight, opts);
 
-        injectLinkTag(darkPortraitDataUrl, `screen and (prefers-color-scheme: dark) and (orientation: portrait)`, opts.customAttribute!);
-        injectLinkTag(darkLandscapeDataUrl, `screen and (prefers-color-scheme: dark) and (orientation: landscape)`, opts.customAttribute!);
+        injectLinkTag(darkPortraitDataUrl, `screen and (prefers-color-scheme: dark) and (orientation: portrait)`, opts.customAttribute);
+        injectLinkTag(darkLandscapeDataUrl, `screen and (prefers-color-scheme: dark) and (orientation: landscape)`, opts.customAttribute);
     }
 }
