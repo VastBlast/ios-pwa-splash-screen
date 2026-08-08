@@ -19,7 +19,6 @@ yarn add ios-pwa-splash-screen
 * Generates and injects `<link rel="apple-touch-startup-image">` for both portrait and landscape
 * Supports light & dark mode icons
 * Cleans up old tags on each run
-* Optional debug logging
 
 ## Quick Start (local)
 
@@ -42,7 +41,6 @@ window.addEventListener('load', () => {
     },
     crossOrigin: 'anonymous',
     ensureMetaTags: true,
-    debug: false,
   }).catch(err => {
     console.error('Splash generation failed:', err);
   });
