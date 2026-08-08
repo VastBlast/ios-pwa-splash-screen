@@ -1,111 +1,177 @@
 # ios-pwa-splash-screen
 
-Add iOS PWA splash screens to your Progressive Web App with zero configuration.
+Add iOS and iPadOS PWA splash screens generated from your app icons.
 
-## Installation
-
-```bash
-npm install ios-pwa-splash-screen
-# or
-yarn add ios-pwa-splash-screen
-```
-
-## Demo
-[Live Demo (add this to your home screen)](https://vastbla.st/ios-pwa-splash-screen)
+[Demo](https://vastbla.st/ios-pwa-splash-screen)
 
 ## Features
 
-* Automatically detects iOS/iPadOS devices
-* Generates and injects `<link rel="apple-touch-startup-image">` for both portrait and landscape
-* Supports light & dark mode icons
-* Cleans up old tags on each run
+- Creates portrait and landscape `<link rel="apple-touch-startup-image">` tags
+- Supports separate light and dark mode icons
+- Detects iOS and iPadOS by default
+- Replaces previously generated tags when run again
+- Includes ESM, CommonJS, UMD, and TypeScript declarations
 
-## Quick Start (local)
+## Install
 
-Import and run as early as possible (e.g. in your main entry script):
-
-```ts
-import { generateIosPwaSplash } from 'ios-pwa-splash-screen';
-
-window.addEventListener('load', () => {
-  generateIosPwaSplash({
-    icon: {
-      url: '/assets/icon-light.png',
-      backgroundColor: '#ffffff',
-      margin: 20,
-    },
-    iconDark: {
-      url: '/assets/icon-dark.png',
-      backgroundColor: '#000000',
-      margin: 20,
-    },
-    crossOrigin: 'anonymous',
-    ensureMetaTags: true,
-  }).catch(err => {
-    console.error('Splash generation failed:', err);
-  });
-});
+```bash
+npm install ios-pwa-splash-screen
 ```
 
-## CDN Usage
+## Basic usage
 
-You can load the library directly from unpkg or jsDelivr without installing:
+Define a setup function:
 
-### ES Module (modern browsers)
+```ts
+// src/pwa-splash.ts
+import { generateIosPwaSplash } from 'ios-pwa-splash-screen';
+
+export function setupIosSplashScreen() {
+  generateIosPwaSplash({
+    icon: { url: '/icons/icon-light.png', backgroundColor: '#fff' },
+    iconDark: { url: '/icons/icon-dark.png', backgroundColor: '#000' },
+  }).catch(console.error);
+}
+```
+
+Run it from a browser entry point:
+
+```ts
+import { setupIosSplashScreen } from './pwa-splash';
+
+setupIosSplashScreen();
+```
+
+Local icon URLs need no extra configuration. For an icon hosted on another origin, that server must allow CORS and `crossOrigin: 'anonymous'` must be set. Set `ensureIos: false` when testing on a non-iOS device.
+
+## Framework examples
+
+These examples use `setupIosSplashScreen` from above.
+
+### React and Next.js
+
+```tsx
+'use client'; // Required by the Next.js App Router.
+
+import { useEffect } from 'react';
+import { setupIosSplashScreen } from './pwa-splash';
+
+export function PwaSplashSetup() {
+  useEffect(() => setupIosSplashScreen(), []);
+
+  return null;
+}
+```
+
+Render `<PwaSplashSetup />` in the root component or layout.
+
+### Vue and Nuxt
+
+Call it from the root `App.vue` or layout:
+
+```vue
+<script setup lang="ts">
+import { onMounted } from 'vue';
+import { setupIosSplashScreen } from './pwa-splash';
+
+onMounted(setupIosSplashScreen);
+</script>
+```
+
+### Svelte and SvelteKit
+
+Call it from the root component or `+layout.svelte`:
+
+```svelte
+<script lang="ts">
+  import { onMount } from 'svelte';
+  import { setupIosSplashScreen } from './pwa-splash';
+
+  onMount(setupIosSplashScreen);
+</script>
+```
+
+### Angular
+
+```ts
+import { afterNextRender, Component } from '@angular/core';
+import { setupIosSplashScreen } from './pwa-splash';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+})
+export class AppComponent {
+  constructor() {
+    afterNextRender(setupIosSplashScreen);
+  }
+}
+```
+
+### Astro
+
+Call it from a `<script>` in the root layout:
+
+```astro
+<script>
+  import { setupIosSplashScreen } from './pwa-splash';
+
+  setupIosSplashScreen();
+</script>
+```
+
+## CDN usage
+
+The examples use unpkg. For jsDelivr, replace `https://unpkg.com/` with `https://cdn.jsdelivr.net/npm/`.
+
+### ES module
 
 ```html
 <script type="module">
   import { generateIosPwaSplash } from 'https://unpkg.com/ios-pwa-splash-screen/dist/index.js';
-  // import { generateIosPwaSplash } from 'https://cdn.jsdelivr.net/npm/ios-pwa-splash-screen/dist/index.js';
 
-  window.addEventListener('load', () => {
-    generateIosPwaSplash({
-      icon: { url: '/icon-light.png', backgroundColor: '#fff', margin: 20 },
-      iconDark: { url: '/icon-dark.png', backgroundColor: '#000', margin: 20 },
-    });
-  });
+  generateIosPwaSplash({
+    icon: { url: '/icon-light.png', backgroundColor: '#fff' },
+    iconDark: { url: '/icon-dark.png', backgroundColor: '#000' },
+  }).catch(console.error);
 </script>
 ```
 
-### UMD (classic `<script>` tag)
+### UMD
 
 ```html
-<!-- unpkg -->
 <script src="https://unpkg.com/ios-pwa-splash-screen/dist/index.umd.js"></script>
-<!-- jsDelivr -->
-<script src="https://cdn.jsdelivr.net/npm/ios-pwa-splash-screen/dist/index.umd.js"></script>
 
 <script>
-  // `generateIosPwaSplash` is exposed on window.IosPwaSplashScreen
   window.IosPwaSplashScreen.generateIosPwaSplash({
-    icon: { url: '/icon-light.png', backgroundColor: '#fff', margin: 20 },
-    iconDark: { url: '/icon-dark.png', backgroundColor: '#000', margin: 20 },
-  });
+    icon: { url: '/icon-light.png', backgroundColor: '#fff' },
+    iconDark: { url: '/icon-dark.png', backgroundColor: '#000' },
+  }).catch(console.error);
 </script>
 ```
 
 ## Options
 
-| Option             | Type                               | Default                       | Description                                                            |
-| ------------------ | ---------------------------------- | ----------------------------- | ---------------------------------------------------------------------- |
-| `icon`             | `IconConfig`                       | **required**                  | Light-mode icon config (URL, bg color, margin)                         |
-| `iconDark`         | `IconConfig \| undefined`          | *none*                        | Dark-mode icon config; omit to disable dark-mode splash                |
-| `ensureIos`        | `boolean`                          | `true`                        | Only run on iOS/iPadOS devices                                         |
-| `ensureMetaTags`   | `boolean`                          | `true`                        | Auto-inject `<meta name="apple-mobile-web-app-capable" content="yes">` |
-| `crossOrigin`      | `'anonymous' \| 'use-credentials'` | *none*                        | Sets `img.crossOrigin` on the icon image                               |
-| `imageType`        | `'image/png' \| 'image/jpeg'`      | `'image/png'`                 | Output format                                                          |
-| `quality`          | `number (0–1)`                     | `1`                           | JPEG quality (if `imageType === 'image/jpeg'`)                         |
-| `fetchPriority`    | `'low' \| 'high' \| 'auto'`        | `'high'`                      | Sets `img.fetchPriority`                                               |
-| `cleanup`          | `boolean`                          | `true`                        | Remove previously generated `<link>` tags before injecting new ones    |
-| `customAttribute`  | `string`                           | `'data-pwa-splash-generated'` | Attribute to flag generated tags                                       |
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `icon` | `IconConfig` | **required** | Light-mode icon configuration |
+| `iconDark` | `IconConfig` | None | Dark-mode icon configuration |
+| `ensureIos` | `boolean` | `true` | Only run on iOS and iPadOS |
+| `ensureMetaTags` | `boolean` | `true` | Ensure the Apple web-app-capable meta tag exists |
+| `crossOrigin` | `'anonymous' \| 'use-credentials'` | None | Set `img.crossOrigin` when loading icons |
+| `imageType` | `'image/png' \| 'image/jpeg'` | `'image/png'` | Generated image format |
+| `quality` | `number` | `1` | JPEG quality from `0` to `1` |
+| `fetchPriority` | `'low' \| 'high' \| 'auto'` | `'high'` | Icon image fetch priority |
+| `cleanup` | `boolean` | `true` | Remove previously generated startup-image tags |
+| `customAttribute` | `string` | `'data-pwa-splash-generated'` | Attribute used to identify generated tags |
 
 ### `IconConfig`
 
-| Property          | Type     | Default | Description                                   |
-| ----------------- | -------- | ------- | --------------------------------------------- |
-| `url`             | `string` | —       | URL of the square icon image (e.g. 512×512)   |
-| `backgroundColor` | `string` | —       | Any valid CSS color for the splash background |
-| `margin`          | `number` | `25`    | Margin % around the icon on the splash        |
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `url` | `string` | **required** | Square icon URL |
+| `backgroundColor` | `string` | **required** | Splash screen background color |
+| `margin` | `number` | `25` | Icon margin as a percentage of the shorter screen edge |
 
 ## License
 
