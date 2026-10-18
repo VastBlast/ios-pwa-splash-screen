@@ -2,7 +2,10 @@
  * Configuration for a single icon variant (e.g., light or dark mode).
  */
 export interface IconConfig {
-    /** The URL of the icon image. Should be a square image (e.g., 512x512). */
+    /**
+     * The URL of the icon image. Should be a square image (e.g., 512x512).
+     * Generated images are reused for the same URL, so give a changed icon a new URL.
+     */
     url: string;
     /** The background color of the splash screen. Can be any valid CSS color string. */
     backgroundColor: string;
@@ -56,12 +59,7 @@ export interface PwaSplashOptions {
      */
     fetchPriority?: 'low' | 'high' | 'auto';
     /**
-     * If true, removes any previously generated splash screen link tags before adding new ones.
-     * @default true
-     */
-    cleanup?: boolean;
-    /**
-     * A custom data attribute to mark the generated link tags. Used for cleanup.
+     * A custom data attribute to mark the generated link tags. A later call replaces the tags that carry the same attribute.
      * @default 'data-pwa-splash-generated'
      */
     customAttribute?: string;

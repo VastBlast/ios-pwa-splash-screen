@@ -9,7 +9,8 @@ Add iOS and iPadOS PWA splash screens generated from your app icons.
 - Creates portrait and landscape `<link rel="apple-touch-startup-image">` tags
 - Supports separate light and dark mode icons
 - Detects iOS and iPadOS by default
-- Replaces previously generated tags when run again
+- Encodes the images in a Web Worker, so the page stays responsive
+- Replaces previously generated tags when run again, reusing images it has already made
 - Includes ESM, CommonJS, UMD, and TypeScript declarations
 
 ## Install
@@ -43,6 +44,14 @@ setupIosSplashScreen();
 ```
 
 Local icon URLs need no extra configuration. For an icon hosted on another origin, that server must allow CORS and `crossOrigin: 'anonymous'` must be set. Set `ensureIos: false` when testing on a non-iOS device.
+
+## Running it again
+
+Call `generateIosPwaSplash` again whenever the splash screens should change, for example when the user picks a different appearance in your app. Each call replaces the tags from the previous one.
+
+- Images are reused while their inputs stay the same: icon URL and `crossOrigin`, background color, margin, image format and quality, and screen size. The images for the two most recently used icon configurations are kept, which covers switching between a light and a dark appearance. If the icon file changes, give it a new URL.
+- When calls overlap, the most recent one decides the tags. Once a newer call has started, earlier calls resolve without changing them.
+- If a call fails, the existing tags stay in place.
 
 ## Framework examples
 
@@ -162,8 +171,7 @@ The examples use unpkg. For jsDelivr, replace `https://unpkg.com/` with `https:/
 | `imageType` | `'image/png' \| 'image/jpeg'` | `'image/png'` | Generated image format |
 | `quality` | `number` | `1` | JPEG quality from `0` to `1` |
 | `fetchPriority` | `'low' \| 'high' \| 'auto'` | `'high'` | Icon image fetch priority |
-| `cleanup` | `boolean` | `true` | Remove previously generated startup-image tags |
-| `customAttribute` | `string` | `'data-pwa-splash-generated'` | Attribute used to identify generated tags |
+| `customAttribute` | `string` | `'data-pwa-splash-generated'` | Attribute that marks the generated tags. A later call replaces the tags with the same attribute |
 
 ### `IconConfig`
 
@@ -172,6 +180,20 @@ The examples use unpkg. For jsDelivr, replace `https://unpkg.com/` with `https:/
 | `url` | `string` | **required** | Square icon URL |
 | `backgroundColor` | `string` | **required** | Splash screen background color |
 | `margin` | `number` | `25` | Icon margin as a percentage of the shorter screen edge |
+
+## Browser support
+
+Splash screens are generated on iOS and iPadOS, or in any browser with `ensureIos: false`. On iOS and iPadOS 16.4 and later, and in other current browsers, the full-screen images are painted and encoded in a Web Worker using `OffscreenCanvas`. Where that is not available, they are encoded on the main thread, one image per task.
+
+### Content Security Policy
+
+The worker is started from a `blob:` URL. If your page sets a Content Security Policy, allow `blob:` in `worker-src`, or in the directive it falls back to (`child-src`, then `script-src`, then `default-src`):
+
+```
+worker-src 'self' blob:
+```
+
+Without it, the browser blocks the worker and logs a CSP violation, and the images are encoded on the main thread instead. Pages that enforce Trusted Types also use the main thread.
 
 ## License
 

@@ -1,5 +1,3 @@
-import type { IconConfig, PwaSplashOptions } from "./types";
-
 export function isIOS(): boolean {
     // iPadOS 13+ may use the same desktop-class user agent as macOS.
     return (/iPad|iPhone|iPod/.test(navigator.userAgent)
@@ -18,40 +16,6 @@ export function loadImage(url: string, crossOrigin?: 'anonymous' | 'use-credenti
     });
 };
 
-export const createSplashscreen = (iconImage: HTMLImageElement, config: IconConfig, canvasWidth: number, canvasHeight: number, options: PwaSplashOptions): string => {
-    const canvas = document.createElement('canvas');
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
-    const ctx = canvas.getContext('2d');
-
-    if (!ctx) throw new Error('Failed to get 2D context from canvas.');
-
-    ctx.fillStyle = config.backgroundColor;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    const margin = (config.margin ?? 25) / 100;
-    const smallerDim = Math.min(canvas.width, canvas.height);
-    const marginPixels = smallerDim * margin;
-
-    const drawableWidth = canvas.width - (marginPixels * 2);
-    const drawableHeight = canvas.height - (marginPixels * 2);
-
-    const aspectRatio = iconImage.width / iconImage.height;
-    let drawWidth = drawableWidth;
-    let drawHeight = drawWidth / aspectRatio;
-
-    if (drawHeight > drawableHeight) {
-        drawHeight = drawableHeight;
-        drawWidth = drawHeight * aspectRatio;
-    }
-
-    const x = (canvas.width - drawWidth) / 2;
-    const y = (canvas.height - drawHeight) / 2;
-    ctx.drawImage(iconImage, x, y, drawWidth, drawHeight);
-
-    return canvas.toDataURL(options.imageType, options.quality);
-};
-
 export function injectLinkTag(href: string, media: string, customAttribute: string): void {
     const link = document.createElement('link');
     link.rel = 'apple-touch-startup-image';
@@ -61,7 +25,15 @@ export function injectLinkTag(href: string, media: string, customAttribute: stri
     document.head.appendChild(link);
 };
 
-export function removeLinkTags(customAttribute: string): void {
-    const links = document.head.querySelectorAll(`link[rel="apple-touch-startup-image"][${customAttribute}="true"]`);
+/** Replaces the generated startup-image tags, leaving them in place when nothing changed. */
+export function replaceLinkTags(splashScreens: { href: string; media: string }[], customAttribute: string): void {
+    const links = document.head.querySelectorAll<HTMLLinkElement>(`link[rel="apple-touch-startup-image"][${customAttribute}="true"]`);
+    const unchanged = links.length === splashScreens.length
+        && splashScreens.every(({ href, media }, i) => links[i].getAttribute('href') === href && links[i].media === media);
+    if (unchanged) return;
+
     links.forEach(el => el.remove());
+    for (const { href, media } of splashScreens) {
+        injectLinkTag(href, media, customAttribute);
+    }
 };
